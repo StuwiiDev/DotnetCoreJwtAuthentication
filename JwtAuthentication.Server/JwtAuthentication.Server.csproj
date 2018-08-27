@@ -17,4 +17,8 @@
     <ProjectReference Include="..\JwtAuthentication.Shared\JwtAuthentication.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Model\" />
+  </ItemGroup>
+
 </Project>

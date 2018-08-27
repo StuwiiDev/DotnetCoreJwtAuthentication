@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using JwtAuthentication.Server.Interface;
-using JwtAuthentication.Server.Model;
 using JwtAuthentication.Server.Service;
+using JwtAuthentication.Shared;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
