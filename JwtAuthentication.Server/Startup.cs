@@ -7,10 +7,12 @@ using Newtonsoft.Json.Serialization;
 using System.Linq;
 using System.Net.Mime;
 using System.Text;
+using JwtAuthentication.Server.Data;
 using JwtAuthentication.Server.Interface;
 using JwtAuthentication.Server.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -32,6 +34,10 @@ namespace JwtAuthentication.Server
             services.AddMvc();
 
             services.AddTransient<IJwtTokenService, JwtTokenService>();
+
+            // Add in the DbContext which points to the appsettings connection string
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             //Setting up Jwt Authentication
             services.AddAuthentication(options =>

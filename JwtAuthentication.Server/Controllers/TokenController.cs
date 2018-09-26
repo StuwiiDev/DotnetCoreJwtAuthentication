@@ -6,6 +6,7 @@ using JwtAuthentication.Server.Interface;
 using JwtAuthentication.Server.Service;
 using JwtAuthentication.Shared;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JwtAuthentication.Server.Controllers
@@ -15,11 +16,21 @@ namespace JwtAuthentication.Server.Controllers
     public class TokenController : ControllerBase
     {
         private readonly IJwtTokenService _tokenService;
+        
+        // TODO: Inject user manager
+
+
         public TokenController(IJwtTokenService tokenService)
         {
             _tokenService = tokenService;
         }
 
+        // TODO: Registration method with registrationViewModel
+
+        // TODO: login method with loginViewModel
+
+
+        // TODO: change this to a private method and pass it to login method
         [HttpPost]
         public IActionResult GenerateToken([FromBody] TokenViewModel vm)
         {
