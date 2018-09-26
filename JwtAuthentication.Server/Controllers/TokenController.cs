@@ -12,31 +12,72 @@ using Microsoft.AspNetCore.Mvc;
 namespace JwtAuthentication.Server.Controllers
 {
     [Route("api/[controller]")]
+    [Produces("application/json")]
     [ApiController]
     public class TokenController : ControllerBase
     {
         private readonly IJwtTokenService _tokenService;
-        
-        // TODO: Inject user manager
+        private readonly UserManager<IdentityUser> _userManager;
 
 
-        public TokenController(IJwtTokenService tokenService)
+        public TokenController(IJwtTokenService tokenService, UserManager<IdentityUser> userManager)
         {
             _tokenService = tokenService;
+            _userManager = userManager;
         }
 
-        // TODO: Registration method with registrationViewModel
-
-        // TODO: login method with loginViewModel
-
-
-        // TODO: change this to a private method and pass it to login method
+        // Registration method to create new Identity users
         [HttpPost]
-        public IActionResult GenerateToken([FromBody] TokenViewModel vm)
+        [Route("Registration")]
+        public async Task<IActionResult> Registration([FromBody] TokenViewModel vm)
         {
-            var token = _tokenService.BuildToken(vm.Email);
+            if (ModelState.IsValid == false)
+            {
+                return BadRequest();
+            }
 
-            return Ok(new {token});
+            var result = await _userManager.CreateAsync(new IdentityUser()
+            {
+                UserName = vm.Email,
+                Email = vm.Email
+            }, vm.Password);
+
+            if (result.Succeeded == false)
+            {
+                return StatusCode(500, result.Errors);
+            }
+
+            return Ok();
+        }
+
+
+        // Login method to allow Identity user logins
+        [HttpPost]
+        [Route("Login")]
+        public async Task<IActionResult> Login([FromBody] TokenViewModel vm)
+        {
+            if (ModelState.IsValid == false)
+            {
+                return BadRequest();
+            }
+
+            var user = await _userManager.FindByEmailAsync(vm.Email);
+            var correctUser = await _userManager.CheckPasswordAsync(user, vm.Password);
+
+            if (correctUser == false)
+            {
+                return BadRequest("Username or password is incorrect");
+            }
+
+            return Ok(new { token = GenerateToken(vm.Email) });
+        }
+
+        // Generates a token from the token service and returns it as a string
+        private  string GenerateToken(string email)
+        {
+            var token = _tokenService.BuildToken(email);
+
+            return token;
         }
     }
 }

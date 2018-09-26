@@ -37,7 +37,10 @@ namespace JwtAuthentication.Server
 
             // Add in the DbContext which points to the appsettings connection string
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDefaultIdentity<IdentityUser>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
 
             //Setting up Jwt Authentication
             services.AddAuthentication(options =>

@@ -1,10 +1,11 @@
 ﻿@using JwtAuthentication.Shared
-@page "/login"
+@inject Microsoft.AspNetCore.Blazor.Services.IUriHelper UriHelper
+@page "/registration"
 @inject HttpClient Http
 
 
 <div class="container">
-    <h1>Log in to JWT Authentication!</h1>
+    <h1>Register for JWT Authentication!</h1>
     <div class="form-group">
         <label for="email">Email</label>
         <input type="text" name="email" placeholder="Email" class="form-control" bind="@Email" />
@@ -20,7 +21,6 @@
 @functions {
 public string Email { get; set; } = "";
 public string Password { get; set; } = "";
-public string Token { get; set; } = "";
 
 private async Task SubmitForm()
 {
@@ -29,8 +29,8 @@ private async Task SubmitForm()
         Email = Email,
         Password = Password
     };
-    var response = await Http.PostJsonAsync<object>("http://localhost:57778/api/Token/login", vm);
+    await Http.PostJsonAsync("http://localhost:57778/api/Token/Registration", vm);
 
-    Console.WriteLine(response);
+    UriHelper.NavigateTo("/login");
 }
 }
